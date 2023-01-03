@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.PostMapping
+
 
 @SpringBootApplication
 class DemoApplication
@@ -17,6 +20,13 @@ fun main(args: Array<String>) {
 	runApplication<DemoApplication>(*args)
 }
 
+// Messages table created in SQL schema. Table structure matches Message class:
+/*
+	CREATE TABLE IF NOT EXISTS messages (
+	  id                     VARCHAR(60)  DEFAULT RANDOM_UUID() PRIMARY KEY, <- Creates unique ID
+	  text                   VARCHAR      NOT NULL <- Can't be null (as specified in data class below)
+	);
+ */
 @Table("MESSAGES")
 data class Message(@Id val id: String?, val text: String)
 
@@ -27,7 +37,6 @@ interface MessageRepository: CrudRepository<Message, String>{
 	@Query("select * from messages")
 	fun findMessages(): List<Message>
 }
-
 // @Service = Annotation marking class as a SERVICE PROVIDER (= providing some business functionalities).
 // = Classes residing in SERVICE LAYER.
 @Service
@@ -45,11 +54,12 @@ class MessageService(val db: MessageRepository) {
 	in Spring MVC.
  */
 @RestController
-class MessageResource {
+class MessageResource(val service: MessageService) {
 	@GetMapping("/")
-	fun index(): List<Message> = listOf(
-		Message("1", "Hello!"),
-		Message("2", "Bonjour!"),
-		Message("3", "Privet!")
-	)
+	fun index(): List<Message> = service.findMessages()
+
+	@PostMapping
+	fun post(@RequestBody message: Message) {
+		service.post(message)
+	}
 }
