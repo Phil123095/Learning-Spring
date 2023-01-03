@@ -1,8 +1,8 @@
 # Read Me // General Notes & Learnings
-The following was discovered as part of building this project:
-
-* The JVM level was changed from '11' to '17', review the [JDK Version Range](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-Versions#jdk-version-range) on the wiki for more details.
-
+* Tutorial Source: [Create a RESTful web service with a database using Spring Boot - tutorial (JetBrains)](https://kotlinlang.org/docs/jvm-spring-boot-restful.html#configure-the-database)
+  * NOTE: There are a few inconsistencies in the tutorial. Namely, certain application.properties inputs need to be changed:
+    * [OLD] spring.datasource.schema=classpath:sql/schema.sql -> [NEW] spring.sql.init.schema-locations=classpath:sql/schema.sql
+    * [OLD] spring.datasource.initialization-mode=always -> [NEW] spring.sql.init.mode=always
 # Typical Spring Boot Architecture [Source](https://www.javatpoint.com/spring-boot-architecture)
 
 ## Four Layers
